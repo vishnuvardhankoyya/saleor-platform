@@ -23,7 +23,18 @@ services:
     environment:
       - JAEGER_AGENT_HOST=jaeger
       - DASHBOARD_URL=http://localhost:9000/
-      - ALLOWED_HOSTS=localhost,api
+
+  storefront:
+    build:
+      context: ./saleor-storefront
+      dockerfile: ./Dockerfile.dev
+    ports:
+      - 3000:3000
+    restart: unless-stopped
+    volumes:
+      - ./saleor-storefront/:/app:cached
+      - /app/node_modules/
+    command: npm start -- --host 0.0.0.0
 
   dashboard:
     image: ghcr.io/saleor/saleor-dashboard:latest
